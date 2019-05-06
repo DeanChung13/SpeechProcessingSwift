@@ -102,16 +102,17 @@ import Accelerate
         if self.windowType != .none {
             
             if self.window == nil {
-                self.window = [Float](repeating: 0.0, count: size)
+                var window = [Float](repeating: 0.0, count: size)
                 
                 switch self.windowType {
                 case .hamming:
-                    vDSP_hamm_window(&self.window!, UInt(size), 0)
+                    vDSP_hamm_window(&window, UInt(size), 0)
                 case .hanning:
-                    vDSP_hann_window(&self.window!, UInt(size), Int32(vDSP_HANN_NORM))
+                    vDSP_hann_window(&window, UInt(size), Int32(vDSP_HANN_NORM))
                 default:
                     break
                 }
+                self.window = window
             }
             
             // Apply the window
@@ -149,9 +150,9 @@ import Accelerate
         vDSP_fft_zrip(self.fftSetup, &(self.complexBuffer!), 1, UInt(self.log2Size), Int32(FFT_FORWARD))
         
         // Store and square (for better visualization & conversion to db) the magnitudes
-        self.magnitudes = [Float](repeating: 0.0, count: self.halfSize)
-        vDSP_zvmags(&(self.complexBuffer!), 1, &self.magnitudes!, 1, UInt(self.halfSize))
-        
+        var magnitudes = [Float](repeating: 0.0, count: self.halfSize)
+        vDSP_zvmags(&(self.complexBuffer!), 1, &magnitudes, 1, UInt(self.halfSize))
+        self.magnitudes = magnitudes
         self.hasPerformedFFT = true
     }
     

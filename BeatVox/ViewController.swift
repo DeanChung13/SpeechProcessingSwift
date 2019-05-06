@@ -60,7 +60,7 @@ class ViewController: UIViewController {
         self.spectralView.setNeedsDisplay()
     }
     
-    func textFieldDidChange(_ textField: UITextField) {
+  @objc func textFieldDidChange(_ textField: UITextField) {
         Analyser.sharedInstance.phonema = textField.text!
     }
     
